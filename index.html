@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Swirl</title>
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#fff}
+#stage{position:absolute;left:50%;top:50%;width:960px;height:640px;transform-origin:center;background:#000}
+canvas{position:absolute;inset:0;width:960px;height:640px}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:#000}
+.screen.on{display:flex}
+.logo{font:italic bold 92px Georgia,'Segoe Script',serif;background:linear-gradient(90deg,#ff9a1a,#b43cff,#33d433,#3a6bff);-webkit-background-clip:text;color:transparent;margin:0 0 6px;letter-spacing:2px}
+.sub{color:#8a8;font-size:13px;margin-bottom:22px}
+.menu button,.dlg button,.opt button{display:block;width:290px;margin:7px auto;padding:10px;font:italic bold 24px Georgia,serif;color:#fff;background:#14143a;border:2px solid #4a4ab0;border-radius:4px;cursor:pointer}
+.menu button:hover,.dlg button:hover,.opt button:hover{background:#2c2c80;color:#fc3}
+.menu button:nth-child(1){color:#ff9a1a}.menu button:nth-child(2){color:#6f6}.menu button:nth-child(3){color:#b87cff}.menu button:nth-child(4){color:#6cf}
+#dialog{background:rgba(0,0,0,.72)}
+.dlg{background:#0b0b2a;border:3px solid #6a6ae0;padding:22px 34px;min-width:380px;max-width:520px;text-align:left}
+.dlg h2{margin:0 0 12px;font:italic bold 34px Georgia,serif;color:#fc3;text-align:center}
+.dlg p{margin:4px 0;font-size:16px}
+.dlg .btns{margin-top:14px}
+.opt{width:560px;text-align:left}
+.opt h2,.rules h2,.scores h2{font:italic bold 40px Georgia,serif;color:#fc3;margin:0 0 14px;text-align:center}
+.row{display:flex;justify-content:space-between;align-items:center;margin:9px 0;font-size:17px}
+.row button{width:auto!important;display:inline-block!important;margin:0 0 0 6px!important;padding:4px 12px!important;font:bold 15px Arial!important}
+.row button.sel{background:#6a6ae0!important;color:#fff!important}
+.rules{width:640px;font-size:15px;line-height:1.45}.rules b{color:#fc3}
+.scores table{border-collapse:collapse;min-width:420px}.scores td,.scores th{padding:3px 14px;font-size:16px;text-align:left}.scores th{color:#fc3}
+.back{width:190px!important;margin-top:18px!important}
+</style></head><body>
+<div id="stage">
+ <canvas id="cv" width="960" height="640"></canvas>
+ <div id="title" class="screen on"><div class="logo">Swirl</div><div class="sub">a color-matching puzzle game</div>
+  <div class="menu"><button data-m="level">Level Challenge</button><button data-m="single">Single Game</button><button data-m="versus">Versus Challenge</button><button data-m="split">Split Screen</button><button data-m="options">Options</button><button data-m="scores">Top Scores</button><button data-m="rules">How to Play</button></div></div>
+ <div id="options" class="screen"><div class="opt"><h2>Options</h2><div id="optrows"></div><button class="back" data-m="title">Back</button></div></div>
+ <div id="scores" class="screen"><div class="scores"><h2>Top Scores</h2><div id="scoretbl"></div><div style="text-align:center"><button class="back" data-m="title" style="font:italic bold 24px Georgia;color:#fff;background:#14143a;border:2px solid #4a4ab0;padding:10px;cursor:pointer">Back</button></div></div></div>
+ <div id="rules" class="screen"><div class="rules"><h2>How to Play</h2>
+  <p>Swirls of the same color that touch (up / down / left / right) form a <b>combo</b>. Click a swirl to highlight its group and see its point value, then <b>click again to remove it</b>. Swirls fall, and empty columns slide left. Click elsewhere to cancel. Keyboard: arrows move, Enter/Space selects/removes, X shows goals.</p>
+  <p><b>Scoring:</b> a combo of n swirls = 4n² − 4n − 4 (2→4, 3→20, 10→356, 40→6236). A lone <b>Single</b> costs 100. Emptying several columns in one move gives a <b>column bonus</b> (25, 75, 150, 250, 375 …). Clear the whole board with <b>no Singles</b> and the score is <b>doubled</b>.</p>
+  <p><b>Level Challenge:</b> beat five goals each level - Largest Combo, max Singles, Big Column Bonus, Total Combos, Score. Optional 120s timer: each second left is worth 50.</p>
+  <p><b>Single Game:</b> just maximise your score. <b>Versus:</b> take turns on one board (2-4 players, human or CPU). Your color's combos score double; your own Singles cost 200; lose your last swirl of your color and you're out. <b>Split Screen:</b> real-time race on separate boards; clear a color and it vanishes from every board. First to the goal score wins.</p>
+  <button class="back" data-m="title" style="font:italic bold 24px Georgia;color:#fff;background:#14143a;border:2px solid #4a4ab0;padding:10px;cursor:pointer;display:block;margin:12px auto 0">Back</button></div></div>
+ <div id="dialog" class="screen"><div class="dlg"><h2 id="dtitle"></h2><div id="dbody"></div><div class="btns" id="dbtns"></div></div></div>
+</div>
+<script src="js/engine.js"></script><script src="js/audio.js"></script><script src="js/art.js"></script>
+<script src="js/ai.js"></script><script src="js/game.js"></script><script src="js/versus.js"></script><script src="js/split.js"></script><script src="js/main.js"></script>
+</body></html>
