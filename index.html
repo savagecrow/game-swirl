@@ -24,11 +24,24 @@ canvas{position:absolute;inset:0;width:960px;height:640px}
 .rules{width:640px;font-size:15px;line-height:1.45}.rules b{color:#fc3}
 .scores table{border-collapse:collapse;min-width:420px}.scores td,.scores th{padding:3px 14px;font-size:16px;text-align:left}.scores th{color:#fc3}
 .back{width:190px!important;margin-top:18px!important}
+.menu button:nth-child(5){color:#ff6ec7}
+#oncode{font:bold 64px 'Courier New',monospace;letter-spacing:12px;color:#fc3;text-align:center;min-height:76px;line-height:76px;text-shadow:0 0 14px #b43cff}
+.joinrow{display:flex;justify-content:center;align-items:center;gap:10px;margin:10px 0}
+.joinrow button{width:120px!important;margin:0!important}
+#onin{width:150px;padding:10px;font:bold 30px 'Courier New',monospace;letter-spacing:8px;text-align:center;text-transform:uppercase;background:#0b0b2a;color:#fff;border:2px solid #4a4ab0;border-radius:4px}
+#onstatus{min-height:44px;text-align:center;color:#9fd;font-size:15px;margin:6px 0}
 </style></head><body>
 <div id="stage">
  <canvas id="cv" width="960" height="640"></canvas>
  <div id="title" class="screen on"><div class="logo">Swirl</div><div class="sub">a color-matching puzzle game</div>
-  <div class="menu"><button data-m="level">Level Challenge</button><button data-m="single">Single Game</button><button data-m="versus">Versus Challenge</button><button data-m="split">Split Screen</button><button data-m="options">Options</button><button data-m="scores">Top Scores</button><button data-m="rules">How to Play</button></div></div>
+  <div class="menu"><button data-m="level">Level Challenge</button><button data-m="single">Single Game</button><button data-m="versus">Versus Challenge</button><button data-m="split">Split Screen</button><button data-m="online">Play Online</button><button data-m="options">Options</button><button data-m="scores">Top Scores</button><button data-m="rules">How to Play</button></div></div>
+ <div id="online" class="screen"><div class="opt"><h2>Play Online</h2>
+  <p style="text-align:center;font-size:15px;line-height:1.45;margin:0 0 14px;color:#bcd">Split Screen race against a friend. One of you hosts and shares the 4-letter code, the other joins with it. First to the goal wins.</p>
+  <button id="onhost">Host a game</button>
+  <div id="oncode"></div>
+  <div class="joinrow"><input id="onin" maxlength="4" placeholder="CODE" autocomplete="off" spellcheck="false"><button id="onjoin">Join</button></div>
+  <div id="onstatus"></div>
+  <button class="back" data-m="title">Back</button></div></div>
  <div id="options" class="screen"><div class="opt"><h2>Options</h2><div id="optrows"></div><button class="back" data-m="title">Back</button></div></div>
  <div id="scores" class="screen"><div class="scores"><h2>Top Scores</h2><div id="scoretbl"></div><div style="text-align:center"><button class="back" data-m="title" style="font:italic bold 24px Georgia;color:#fff;background:#14143a;border:2px solid #4a4ab0;padding:10px;cursor:pointer">Back</button></div></div></div>
  <div id="rules" class="screen"><div class="rules"><h2>How to Play</h2>
@@ -39,6 +52,6 @@ canvas{position:absolute;inset:0;width:960px;height:640px}
   <button class="back" data-m="title" style="font:italic bold 24px Georgia;color:#fff;background:#14143a;border:2px solid #4a4ab0;padding:10px;cursor:pointer;display:block;margin:12px auto 0">Back</button></div></div>
  <div id="dialog" class="screen"><div class="dlg"><h2 id="dtitle"></h2><div id="dbody"></div><div class="btns" id="dbtns"></div></div></div>
 </div>
-<script src="js/engine.js"></script><script src="js/audio.js"></script><script src="js/art.js"></script>
+<script src="js/peerjs.min.js"></script><script src="js/net.js"></script><script src="js/engine.js"></script><script src="js/audio.js"></script><script src="js/art.js"></script>
 <script src="js/ai.js"></script><script src="js/game.js"></script><script src="js/versus.js"></script><script src="js/split.js"></script><script src="js/main.js"></script>
 </body></html>

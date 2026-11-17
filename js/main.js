@@ -19,7 +19,37 @@ const APP = (() => {
     for (const x of buttons) { const e = document.createElement('button'); e.textContent = x.label; e.onclick = () => { $('dialog').classList.remove('on'); x.fn(); }; b.appendChild(e); }
     $('dialog').classList.add('on');
   };
-  app.start = (m) => {
+  // ---- online (split screen vs a friend) ----
+  app.online = null;
+  const newSeed = () => Math.floor(Math.random() * 2147483646) + 1;
+  app.startOnline = (me, seed, goal) => app.start('split', { me, seed, goal });
+  const hostStart = () => { const seed = newSeed(), goal = opts.goal; NET.send({ t: 'start', seed, goal }); app.startOnline(0, seed, goal); }; // host picks the goal
+  app.requestRematch = () => {
+    if (NET.host) hostStart();
+    else { NET.send({ t: 'rematchReq' }); app.dialog('Rematch', ['Waiting for the host to start...'], [{ label: 'Menu', fn: () => app.leaveOnline() }]); }
+  };
+  app.leaveOnline = () => { NET.send({ t: 'bye' }); app.online = null; app.menu(); setTimeout(() => NET.close(), 300); };
+  const setOn = t => { $('onstatus').textContent = t || ''; };
+  NET.onMsg = m => {
+    if (m.t === 'start') { app.startOnline(1, m.seed, m.goal); return; }
+    if (mode && mode.online && mode.net) mode.net(m);
+  };
+  NET.onStatus = (s, info) => {
+    const inGame = mode && mode.online;
+    if (s === 'waiting') { $('oncode').textContent = info; setOn('Waiting for your friend. Send them this code (or the link to the game).'); }
+    else if (s === 'connecting') setOn('Connecting...');
+    else if (s === 'connected') {
+      if (NET.host && !inGame) hostStart();
+      else if (!NET.host) setOn('Connected! Waiting for the host to start...');
+    } else if (s === 'closed') { if (inGame) mode.peerLeft(); else setOn('Connection closed.'); }
+    else if (s === 'error') { if (inGame && !mode.over) mode.peerLeft(); else setOn(info || 'Connection error.'); }
+  };
+  $('onhost').onclick = () => { $('oncode').textContent = ''; setOn('Contacting matchmaking server...'); NET.hostRoom(); };
+  $('onjoin').onclick = () => { setOn(''); NET.joinRoom($('onin').value); };
+  $('onin').addEventListener('keydown', e => { if (e.key === 'Enter') $('onjoin').click(); });
+
+  app.start = (m, online) => {
+    app.online = online || null;
     SND.on = opts.sound; SND.init();
     for (const el of document.querySelectorAll('.screen')) el.classList.remove('on');
     if (m === 'level') mode = new SoloGame(app, { levelMode: true, timed: opts.timed });
@@ -76,7 +106,8 @@ const APP = (() => {
   document.addEventListener('click', e => {
     const m = e.target.dataset && e.target.dataset.m; if (!m) return;
     SND.init();
-    if (m === 'title') show('title');
+    if (m === 'title') { NET.close(); show('title'); }
+    else if (m === 'online') { $('oncode').textContent = ''; setOn(''); show('online'); }
     else if (m === 'options') { renderOptions(); show('options'); }
     else if (m === 'scores') { renderScores(); show('scores'); }
     else if (m === 'rules') show('rules');

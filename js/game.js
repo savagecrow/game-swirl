@@ -30,7 +30,8 @@ class BoardView {
     const n = grp.length, color = grp[0].c, c = this.cell;
     const mx = grp.reduce((a, s) => a + s.px, 0) / n, my = grp.reduce((a, s) => a + s.py, 0) / n;
     for (const s of grp) this.fx.burst(this.x + (s.px + 0.5) * c, this.y + (s.py + 0.5) * c, s.c, n >= 12 ? 5 : 3, 90 + Math.min(n, 30) * 6, n >= 12 ? 120 : 0);
-    const info = this.board.remove(grp);
+    const at = { x: grp[0].x, y: grp[0].y };
+    const info = this.board.remove(grp); info.at = at;
     if (n === 1) { SND.single(); this.setMood('sad'); }
     else { SND.remove(n); this.setMood(n >= 10 ? 'big' : 'happy', n >= 10 ? 2 : 1); }
     if (info.columns >= 2) SND.column(info.columns);
